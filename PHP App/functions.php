@@ -36,6 +36,7 @@ function redirectToPostedPage()
 function savePostedData($post)
 {
     checkToken($post['token']);
+    validate($post);
     $path = getRefererPath();
     switch ($path) {
         case '/new.php':
@@ -66,4 +67,12 @@ function getTodoList()
 function getSelectedTodo($id)
 {
     return getTodoTextById($id);
+}
+
+function validate($post)
+{
+    if (isset($post['content']) && $post['content'] === '') {
+        $_SESSION['err'] = '入力がありません';
+        redirectToPostedPage();
+    }
 }
