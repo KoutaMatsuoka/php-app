@@ -1,5 +1,8 @@
 <?php
+//入力データの振り分けを行うファイル
+
+
 require_once('functions.php');
 
-createData($_POST);
+savePostedData($_POST);
 header('Location: ./index.php');

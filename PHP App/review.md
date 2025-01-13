@@ -7,8 +7,7 @@
 ```html
 <a href="edit.php?todo_id=123&todo_content=焼肉">更新</a>
 ```
-
-
+  `array(2) { ["todo_id"]=> string(3) "123" ["todo_content"]=> string(6) "焼肉" }`というキー「123」、バリュー「焼肉」の連想配列
 
 ### 以下のフォームの送信ボタンを押下した際にstore.phpの$_POSTにどんな値が格納されるか説明してください。
 
@@ -28,7 +27,7 @@
 
 ### `savePostedData($post)`は何をしているか説明してください。
 
-  
+  リクエスト元のURLを文字列で取得しそのパスを返す`getRefererPath`関数を定義し呼び出している
 
 ### `header('location: ./index.php')`は何をしているか説明してください。
 
@@ -36,7 +35,7 @@
 
 ### `getRefererPath()`は何をしているか説明してください。
 
-  
+  新規作成ページから`POST`されたなら`createTodoData`関数を実行し、編集ページから`POST`されたなら`updateTodoData`関数を実行
 
 ### `connectPdo()` の返り値は何か、またこの記述は何をするための記述か説明してください。
 
@@ -70,16 +69,34 @@
 
 ### `getSelectedTodo($_GET['id'])`の返り値は何か、またなぜ`$_GET['id']` を引数に渡すのか説明してください。
 
+  URLクエリパラメータを取得し、それをそのままfunctions.phpのgetSelectedTodo関数に渡してます。
+getSelectedTodo関数では、connection.phpのgetTodoTextById関数を実行しています。
+getTodoTextById関数では、現在保存されているTODOの内容を返してくれています。
+返された内容を$todoに格納し、HTMLに埋め込むことで、DBに保存されているTODOの内容を表示することができます。
+
 ### `updateTodoData($post)`は何をしているか説明してください。
+
+  `todos`テーブル内の`id`が`$post['id']`と一致するレコードの`content`を`$post['content']`に記載された内容で更新するクエリを実行している
 
 ## 削除
 
 ### `deleteTodoData($id)`は何をしているか説明してください。
 
+  `todos`テーブル内の`id`が`$id`と一致するレコードの`deleted_at`をPHPの`date`関数から取得した現在時刻で更新するクエリを実行している
+
 ### `deleted_at`を現在時刻で更新すると一覧画面からToDoが非表示になる理由を説明してください。
+
+  `connection.php`に記述された`getAllRecords`関数がテーブルのデータのうち`deleted_at`がNULLであるものを参照しており、それを`index.php`に反映させているため
 
 ### 今回のように実際のデータを削除せずに非表示にすることで削除されたように扱うことを〇〇削除というか。
 
+  論理削除
+
 ### 実際にデータを削除することを〇〇削除というか。
 
+  物理削除
+
 ### 前問のそれぞれの削除のメリット・デメリットについて説明してください。
+
+  論理削除はあくまでもデータを非表示にしているだけなので復元が容易だが、残存しているデータの数が増え続ければいずれ容量を圧迫するようになる
+  物理削除はデータの修復が不可能となる代わりに容量の削減としても働くほか、データの流出とも無縁である
